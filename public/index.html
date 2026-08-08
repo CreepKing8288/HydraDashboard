@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hydra Executor - Roblox Script Execution</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Continuous animations for missing elements */
+    @keyframes floatAnimation {
+      0% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-12px) rotate(1.5deg); }
+      100% { transform: translateY(0px) rotate(0deg); }
+    }
+
+    @keyframes pulseGlow {
+      0% { filter: drop-shadow(0 0 10px rgba(229, 57, 53, 0.3)); }
+      50% { filter: drop-shadow(0 0 25px rgba(229, 57, 53, 0.7)); }
+      100% { filter: drop-shadow(0 0 10px rgba(229, 57, 53, 0.3)); }
+    }
+
+    @keyframes spinStar {
+      0% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(180deg) scale(1.15); }
+      100% { transform: rotate(360deg) scale(1); }
+    }
+
+    /* Animated element helper classes */
+    .animated-float {
+      animation: floatAnimation 4s ease-in-out infinite;
+    }
+
+    .animated-glow {
+      animation: pulseGlow 3s infinite ease-in-out;
+    }
+
+    .feature-icon {
+      display: inline-block;
+      font-size: 28px;
+      margin-bottom: 12px;
+      color: var(--red);
+      animation: spinStar 8s linear infinite;
+    }
+
+    /* Scroll reveal dynamic styling */
+    .reveal-on-scroll {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+
+    .reveal-on-scroll.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Testimonial & Contact layout components */
+    .testimonial-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 14px;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .testimonial-card:hover {
+      transform: translateX(8px);
+      border-color: var(--red);
+    }
+
+    .testimonial-card img {
+      width: 64px;
+      height: 64px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+
+    .testimonial-info h4 {
+      font-size: 14px;
+      color: #fff;
+    }
+
+    .testimonial-info p {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .contact-section {
+      margin-top: 60px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      align-items: center;
+    }
+
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .contact-links a {
+      color: var(--text);
+      font-size: 14px;
+      transition: color 0.2s ease;
+    }
+
+    .contact-links a:hover {
+      color: var(--red);
+    }
+
+    @media (max-width: 768px) {
+      .contact-section {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Top Banner Section -->
+  <header class="topbar reveal-on-scroll">
+    <span class="logo">
+      <img src="res/HydraIcon.png" alt="Hydra Icon" style="width: 50px; height: 50px;" class="animated-glow">
+      <span class="logo-dot"></span>HYDRA EXECUTOR
+    </span>
+  </header>
+
+  <main class="hero">
+    <!-- Main Hero Title Section -->
+    <h1 class="hero-title reveal-on-scroll">HYDRA</h1>
+    <br>
+    <!-- Executor Overview Block -->
+    <section class="reveal-on-scroll" style="display: flex; flex-direction: column; align-items: center; text-align: center;">
+
+      <br><br><br><br>
+      <div style="text-align: center;">
+        <img src="res/ExecutorPreview.png" alt="Hydra Interface Preview" class="animated-float animated-glow" style="max-width: 100%; border-radius: 12px;">
+      </div>
+      <br><br>
+      <div class="card" style="max-width: 700px;">
+        <button class="btn btn-primary" style="margin-bottom: 16px;">Download HYDRA EXECUTOR</button>
+      </div>
+    </section>
+    <br><br><br><br><br><br><br><br><br>
+    <!-- Hydra Executor Features Section -->
+    <section style="margin-top: 80px;" class="reveal-on-scroll">
+      <h2 style="font-size: 28px; color: var(--red); margin-bottom: 30px;">Hydra executor Features</h2>
+      <div class="cards">
+        <div class="card" style="text-align: center;">
+          <span class="feature-icon">✦</span>
+          <h3>User-Friendly Interface</h3>
+          <p>Allows for simple navigation and quick access to tools.</p>
+        </div>
+        <div class="card" style="text-align: center;">
+          <span class="feature-icon" style="animation-delay: -2s;">✦</span>
+          <h3>Lightning-fast execution</h3>
+          <p>Ensures scripts run smoothly, enhancing your gameplay experience.</p>
+        </div>
+        <div class="card" style="text-align: center;">
+          <span class="feature-icon" style="animation-delay: -4s;">✦</span>
+          <h3>Wide script compatibility</h3>
+          <p>Supports various scripts, giving you extensive customization options.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Fast Execution Section -->
+    <section class="cards reveal-on-scroll" style="margin-top: 80px; align-items: center;">
+      <div class="card" style="flex: 1;">
+        <h2 style="font-size: 24px; color: #fff; margin-bottom: 12px;">Script Compatibility</h2>
+        <p style="margin-bottom: 20px;">HYDRA supports a wide range of scripts, ensuring your gaming experience is customized to your desires. And giving you a ScriptHub to use without any hassle.</p>
+      </div>
+      <div style="flex: 1; text-align: center;">
+        <img src="res/ScriptHub.png" alt="Script Compatibility Visual" class="animated-float" style="max-width: 490px;">
+      </div>
+    </section>
+
+    <section class="cards reveal-on-scroll" style="margin-top: 80px; align-items: center;">
+      <div style="flex: 1; text-align: center;">
+        <img src="res/FastExecution.png" alt="Fast Execution Visual" class="animated-glow" style="max-width: 380px;">
+      </div>
+      <div class="card" style="flex: 1;">
+        <h2 style="font-size: 24px; color: #fff; margin-bottom: 12px;">Fast Execution</h2>
+        <p style="margin-bottom: 20px;">HYDRA Fast Execution feature significantly speeds up script execution for a smooth gaming experience. This feature design aims to run scripts efficiently, reducing any potential delay. Experience the ability to execute scripts in seconds and access features immediately without any delay.</p>
+      </div>
+    </section>
+
+    <section class="cards reveal-on-scroll" style="margin-top: 80px; align-items: center;">
+      <div class="card" style="flex: 1;">
+        <h2 style="font-size: 24px; color: #fff; margin-bottom: 12px;">Code Correction</h2>
+        <p style="margin-bottom: 20px;">HYDRA EXECUTOR's Code Correction feature ensures that your scripts run smoothly and without errors. This feature design aims to identify and fix common coding issues, providing a more stable and reliable gaming experience.</p>
+      </div>
+      <div style="flex: 1; text-align: center;">
+        <img src="res/CodeCorrection.png" alt="Code Correction Visual" class="animated-float" style="max-width: 490px;">
+      </div>
+    </section>
+
+    <!-- What Users Say Section -->
+    <section style="margin-top: 80px; text-align: left;" class="reveal-on-scroll">
+      <h2 style="font-size: 28px; color: #fff; margin-bottom: 24px;">What Users Say</h2>
+      
+      <div class="testimonial-card">
+        <img src="res/Response/lchii.png" alt="lchii">
+        <div class="testimonial-info">
+          <h4>lchii (Discord)</h4>
+          <p>"hydra is the best! you can play it on any games!"</p>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <img src="res/Response/harvs.png" alt="User Sam K.">
+        <div class="testimonial-info">
+          <h4>Harvs (Discord)</h4>
+          <p>"The script compatibility is unreal! It runs all the top scripts without lag or crashes. Highly recommended!"</p>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <img src="res/Response/Yera.png" alt="User Chris T.">
+        <div class="testimonial-info">
+          <h4>Yera (Discord)</h4>
+          <p>"Fast execution has transformed my gameplay entirely. I can test features and execute complex scripts in no time."</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Developer Section -->
+    <section style="margin-top: 80px; text-align: center;" class="reveal-on-scroll">
+      <h2 style="font-size: 28px; color: var(--red); margin-bottom: 24px;">Meet the Developer</h2>
+      <div class="card" style="max-width: 640px; margin: 0 auto; padding: 24px;">
+        <img src="res/HydraIcon.png" alt="Developer Avatar" class="animated-float animated-glow" style="width: 96px; height: 96px; border-radius: 50%; margin-bottom: 16px;">
+        <h3 style="color: #fff; margin-bottom: 8px;">Hydra Development Team</h3>
+        <p style="color: var(--muted); margin-bottom: 12px;">The minds behind HYDRA EXECUTOR, dedicated to delivering a fast, reliable, and feature-packed script executor for the Roblox community.</p>
+        <a href="#contact" class="btn btn-primary" style="display: inline-block;">Get in Touch</a>
+      </div>
+    </section>
+
+    <!-- Get in Touch Section -->
+    <section class="contact-section reveal-on-scroll">
+      <div style="text-align: left;">
+        <h2 style="font-size: 28px; color: var(--red); margin-bottom: 16px;">Get in Touch</h2>
+        <div class="contact-links">
+          <a href="#contact">Contact us</a>
+          <a href="#discord">Discord server link:</a>
+          <a href="#community">Our Community Games</a>
+        </div>
+      </div>
+      <div style="text-align: center;">
+        <img src="res/HydraIcon.png" alt="Hydra Contact Emblem" class="animated-float animated-glow" style="max-width: 260px;">
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; <span id="year"></span> Hydra Executor. All rights reserved.</p>
+    <p>Not affiliated with Roblox Corporation.</p>
+  </footer>
+
+  <!-- Scroll Animation Script -->
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // IntersectionObserver for scroll-triggered entrance animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, {
+      threshold: 0.1
+    });
+
+    document.querySelectorAll('.reveal-on-scroll').forEach((el) => {
+      observer.observe(el);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login - Hydra Sploits</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="login-wrap">
+    <div class="login-card">
+      <span class="logo login-logo"><span class="logo-dot"></span>HYDRA SPLOITS</span>
+      <h2 class="login-title">Admin Login</h2>
+
+      <form id="loginForm" autocomplete="off">
+        <label class="field">
+          <span>Username</span>
+          <input type="text" id="username" autocomplete="username" required />
+        </label>
+        <label class="field">
+          <span>Password</span>
+          <input type="password" id="password" autocomplete="current-password" required />
+        </label>
+        <button type="submit" class="btn btn-primary btn-block" id="loginBtn">Sign In</button>
+        <p class="form-error" id="loginError"></p>
+      </form>
+
+      <a class="topbar-link back-link" href="/">&larr; Back to site</a>
+    </div>
+  </div>
+
+  <script src="login.js"></script>
+</body>
+</html>

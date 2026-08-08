@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Key System - Hydra Sploits</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="dash-body">
+  <header class="dash-topbar">
+    <span class="logo"><span class="logo-dot"></span>HYDRA SPLOITS</span>
+    <nav class="dash-nav">
+      <button class="dash-tab active" data-tab="keys">Keys</button>
+      <button class="dash-tab" data-tab="security">Security</button>
+      <button class="btn btn-ghost" id="logoutBtn">Logout</button>
+    </nav>
+  </header>
+
+  <main class="dash-main">
+
+    <section id="tab-keys" class="dash-section">
+      <div class="dash-head">
+        <h2>Keys</h2>
+        <button class="btn btn-primary" id="newKeyBtn">+ New Key</button>
+      </div>
+
+      <div id="createKeyPanel" class="panel hidden">
+        <div class="panel-grid">
+          <label class="field">
+            <span>Key (blank to generate)</span>
+            <div class="key-row">
+              <input type="text" id="newKey" placeholder="HS-XXXX-XXXX-XXXX" />
+              <button type="button" class="btn btn-ghost" id="genKeyBtn">Generate</button>
+            </div>
+          </label>
+          <label class="field">
+            <span>Expiration (optional)</span>
+            <input type="datetime-local" id="newExpiration" />
+          </label>
+          <label class="field field-wide">
+            <span>Note</span>
+            <input type="text" id="newNote" placeholder="e.g. Discord: user#0001" />
+          </label>
+        </div>
+        <div class="panel-actions">
+          <button class="btn btn-primary" id="createKeyBtn">Create Key</button>
+          <button class="btn btn-ghost" id="cancelKeyBtn">Cancel</button>
+          <span class="panel-status" id="createStatus"></span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <label class="field field-inline">
+          <span>Filter</span>
+          <input type="text" id="keyFilter" placeholder="Search by key, IP, or note..." />
+        </label>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Key</th>
+                <th>Expires</th>
+                <th>IP</th>
+                <th>Note</th>
+                <th>Created</th>
+                <th class="th-actions">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="keysBody"></tbody>
+          </table>
+          <p class="empty" id="keysEmpty">No keys found.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-security" class="dash-section hidden">
+      <div class="panel">
+        <h3>Change Admin Password</h3>
+        <form id="passwordForm" autocomplete="off">
+          <label class="field">
+            <span>Current password</span>
+            <input type="password" id="curPassword" autocomplete="current-password" required />
+          </label>
+          <label class="field">
+            <span>New password</span>
+            <input type="password" id="newPassword" autocomplete="new-password" required />
+          </label>
+          <button type="submit" class="btn btn-primary">Update Password</button>
+          <p class="form-error" id="passwordStatus"></p>
+        </form>
+      </div>
+      <div class="panel">
+        <h3>Download Build</h3>
+        <p class="muted">Drop your built <code>Hydra Sploits.exe</code> into <code>public/download/</code> to make it available on the site.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: hydra-dashboard
+    runtime: node
+    rootDir: .
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: MONGODB_URI
+        value: mongodb+srv://HydraSploit:qdgWiuE06DtO3R8x@hydrakeysys.q646mpv.mongodb.net/?retryWrites=true&w=majority
