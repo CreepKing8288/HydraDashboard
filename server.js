@@ -5,10 +5,9 @@ const crypto = require('crypto');
 const dns = require('dns');
 const { MongoClient, ObjectId } = require('mongodb');
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 const MONGODB_URI =
-  process.env.MONGODB_URI ||
-  'mongodb+srv://HydraSploit:qdgWiuE06DtO3R8x@hydrakeysys.q646mpv.mongodb.net/?retryWrites=true&w=majority';
+  process.env.MONGODB_URI;
 const DB_NAME = 'hydrakeysys';
 const SESSION_TTL_MS = 12 * 60 * 60 * 1000;
 
