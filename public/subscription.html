@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Subscriptions - Hydra Sploits</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/png" href="res/HydraIcon.png" />
+</head>
+<body>
+  <header class="topbar">
+    <span class="logo">
+      <img src="res/HydraIcon.png" alt="Hydra Icon" style="width: 40px; height: 40px;">
+      <span class="logo-dot"></span>HYDRA SPLOITS
+    </span>
+    <nav class="dash-nav">
+      <a class="btn btn-ghost" href="/">Home</a>
+    </nav>
+  </header>
+
+  <main class="sub-main">
+    <h1 class="sub-title">SUBSCRIPTIONS</h1>
+    <p class="sub-sub">Pick a plan, drop your Discord user/tag, and we will reach out with your key.</p>
+
+    <div id="subGrid" class="sub-grid"></div>
+    <p class="empty" id="subsEmpty">No subscription plans available right now. Check back soon.</p>
+
+    <div class="panel sub-form-panel">
+      <h3>Request a Key</h3>
+      <div class="field">
+        <span>Selected plan</span>
+        <input type="text" id="selPlan" value="None selected" disabled />
+      </div>
+      <div class="field">
+        <span>Discord user/tag</span>
+        <input type="text" id="subDiscord" placeholder="e.g. @user" required />
+      </div>
+      <div class="field">
+        <span>Note (optional)</span>
+        <input type="text" id="subNote" placeholder="Payment Platform Reference ID" />
+      </div>
+      <button class="btn btn-primary btn-block" id="subSubmit">Request Key</button>
+      <p class="form-error" id="subStatus"></p>
+    </div>
+
+    <div class="panel sub-success" id="subSuccess">
+      <h3>Request received</h3>
+      <p class="muted">Keep this request ID so we can find your order:</p>
+      <p class="key-cell" id="subRequestId" style="font-size: 18px; margin: 12px 0;"></p>
+      <p class="muted">Create A Ticket On Our <a href="https://discord.gg/5ScCbRHwxe" target="_blank" rel="noopener noreferrer">Discord Server</a> [ 💎 ] Payment & Billing Category and submit your request id.</p>
+      <a class="btn btn-primary" href="/" style="display: inline-block; margin-top: 16px;">Back to Home</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; <span id="year"></span> Hydra Sploits. All rights reserved.</p>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    let plans = [];
+    let selected = null;
+
+    const grid = document.getElementById('subGrid');
+    const empty = document.getElementById('subsEmpty');
+
+    function render() {
+      grid.innerHTML = '';
+      empty.style.display = plans.length ? 'none' : 'block';
+      plans.forEach((p) => {
+        const dur = p.duration > 0 ? p.duration + (p.duration === 1 ? ' DAY' : ' DAYS') : 'LIFETIME';
+        const card = document.createElement('div');
+        card.className = 'sub-card' + (selected === p._id ? ' selected' : '');
+        card.innerHTML = `
+          <h3>${p.name}</h3>
+          <div class="sub-price">₱${p.price || '—'}</div>
+          <div class="sub-dur">${dur}</div>
+          <p>${p.description || '&nbsp;'}</p>
+        `;
+        card.addEventListener('click', () => {
+          selected = p._id;
+          render();
+          document.getElementById('selPlan').value = p.name;
+        });
+        grid.appendChild(card);
+      });
+    }
+
+    async function load() {
+      try {
+        const data = await fetch('/api/public/plans').then((r) => r.json());
+        plans = data.plans || [];
+        render();
+      } catch (e) {
+        empty.textContent = 'Could not load plans.';
+        empty.style.display = 'block';
+      }
+    }
+
+    const COOLDOWN_MS = 5 * 60 * 60 * 1000;
+    const submitBtn = document.getElementById('subSubmit');
+    const formPanel = document.querySelector('.sub-form-panel');
+    const successPanel = document.getElementById('subSuccess');
+    let submitting = false;
+
+    function showSuccess(requestId) {
+      formPanel.style.display = 'none';
+      document.getElementById('subRequestId').textContent = requestId || '';
+      successPanel.style.display = 'block';
+    }
+
+    const last = Number(localStorage.getItem('hydra_sub_last') || 0);
+    if (last + COOLDOWN_MS > Date.now()) {
+      showSuccess(localStorage.getItem('hydra_sub_rid') || '');
+    }
+
+    document.getElementById('subSubmit').addEventListener('click', async () => {
+      const status = document.getElementById('subStatus');
+      const discord = document.getElementById('subDiscord').value.trim();
+      const note = document.getElementById('subNote').value.trim();
+      status.style.color = '#ff6b60';
+
+      if (submitting) return;
+      if (!selected) { status.textContent = 'Select a plan first.'; return; }
+      if (!discord) { status.textContent = 'Enter your Discord user/tag.'; return; }
+
+      if (last + COOLDOWN_MS > Date.now()) {
+        const secs = Math.ceil((last + COOLDOWN_MS - Date.now()) / 1000);
+        const label = secs >= 3600
+          ? Math.ceil(secs / 3600) + 'h'
+          : Math.ceil(secs / 60) + 'm';
+        status.textContent = 'Please wait ' + label + ' before requesting again.';
+        return;
+      }
+
+      submitting = true;
+      submitBtn.disabled = true;
+      status.textContent = 'Submitting...';
+      try {
+        const res = await fetch('/api/subscriptions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ planId: selected, discord, note }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || 'Request failed.');
+
+        localStorage.setItem('hydra_sub_last', String(Date.now()));
+        localStorage.setItem('hydra_sub_rid', data.requestId || '');
+        showSuccess(data.requestId || '');
+      } catch (err) {
+        status.textContent = err.message;
+      } finally {
+        submitting = false;
+        submitBtn.disabled = false;
+      }
+    });
+
+    load();
+  </script>
+</body>
+</html>

@@ -11,6 +11,7 @@
     <span class="logo"><span class="logo-dot"></span>HYDRA SPLOITS</span>
     <nav class="dash-nav">
       <button class="dash-tab active" data-tab="keys">Keys</button>
+      <button class="dash-tab" data-tab="subscriptions">Subscriptions</button>
       <button class="dash-tab" data-tab="security">Security</button>
       <button class="btn btn-ghost" id="logoutBtn">Logout</button>
     </nav>
@@ -37,6 +38,10 @@
             <span>Expiration (optional)</span>
             <input type="datetime-local" id="newExpiration" />
           </label>
+          <label class="field">
+            <span>Assign subscriber (optional)</span>
+            <select id="newSubscriber"></select>
+          </label>
           <label class="field field-wide">
             <span>Note</span>
             <input type="text" id="newNote" placeholder="e.g. Discord: user#0001" />
@@ -46,6 +51,19 @@
           <button class="btn btn-primary" id="createKeyBtn">Create Key</button>
           <button class="btn btn-ghost" id="cancelKeyBtn">Cancel</button>
           <span class="panel-status" id="createStatus"></span>
+        </div>
+      </div>
+
+      <div id="extendKeyPanel" class="panel hidden">
+        <h3>Extend Key</h3>
+        <label class="field field-wide">
+          <span>New expiration (leave empty for never)</span>
+          <input type="datetime-local" id="extendExpiration" />
+        </label>
+        <div class="panel-actions">
+          <button class="btn btn-primary" id="extendSaveBtn">Set Expiration</button>
+          <button class="btn btn-ghost" id="extendCancelBtn">Cancel</button>
+          <span class="panel-status" id="extendStatus"></span>
         </div>
       </div>
 
@@ -73,8 +91,125 @@
       </div>
     </section>
 
-    <section id="tab-security" class="dash-section hidden">
+    <section id="tab-subscriptions" class="dash-section hidden">
+      <div class="dash-head">
+        <h2>Subscriptions</h2>
+        <button class="btn btn-primary" id="newPlanBtn">+ New Plan</button>
+      </div>
+
+      <div id="createPlanPanel" class="panel hidden">
+        <h3>Create Plan</h3>
+        <div class="panel-grid">
+          <label class="field">
+            <span>Name</span>
+            <input type="text" id="planName" placeholder="e.g. Weekly" />
+          </label>
+          <label class="field">
+            <span>Price</span>
+            <input type="text" id="planPrice" placeholder="e.g. 4.99" />
+          </label>
+          <label class="field">
+            <span>Duration (days)</span>
+            <input type="number" id="planDuration" min="1" placeholder="e.g. 7" />
+          </label>
+          <label class="field">
+            <span>Active</span>
+            <select id="planActive">
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+            </select>
+          </label>
+          <label class="field field-wide">
+            <span>Description</span>
+            <input type="text" id="planDescription" placeholder="Short description shown to users" />
+          </label>
+        </div>
+        <div class="panel-actions">
+          <button class="btn btn-primary" id="createPlanBtn">Create Plan</button>
+          <button class="btn btn-ghost" id="cancelPlanBtn">Cancel</button>
+          <span class="panel-status" id="planStatus"></span>
+        </div>
+      </div>
+
+      <div id="editPlanPanel" class="panel hidden">
+        <h3>Edit Plan</h3>
+        <div class="panel-grid">
+          <label class="field">
+            <span>Name</span>
+            <input type="text" id="editPlanName" />
+          </label>
+          <label class="field">
+            <span>Price</span>
+            <input type="text" id="editPlanPrice" />
+          </label>
+          <label class="field">
+            <span>Duration (days)</span>
+            <input type="number" id="editPlanDuration" min="1" />
+          </label>
+          <label class="field">
+            <span>Active</span>
+            <select id="editPlanActive">
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+            </select>
+          </label>
+          <label class="field field-wide">
+            <span>Description</span>
+            <input type="text" id="editPlanDescription" placeholder="Short description shown to users" />
+          </label>
+        </div>
+        <div class="panel-actions">
+          <button class="btn btn-primary" id="savePlanBtn">Save Changes</button>
+          <button class="btn btn-ghost" id="cancelEditPlanBtn">Cancel</button>
+          <span class="panel-status" id="editPlanStatus"></span>
+        </div>
+      </div>
+
       <div class="panel">
+        <h3>Plans</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Duration</th>
+                <th>Status</th>
+                <th>Created</th>
+                <th class="th-actions">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="plansBody"></tbody>
+          </table>
+          <p class="empty" id="plansEmpty">No plans yet. Create one to show it on the subscription page.</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Subscribers</h3>
+        <p class="muted">People who signed up on the subscription page. Deliver their key manually and mark as given.</p>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Request ID</th>
+                <th>Discord</th>
+                <th>Plan</th>
+                <th>Note</th>
+                <th>Signed Up</th>
+                <th>Status</th>
+                <th class="th-actions">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="subsBody"></tbody>
+          </table>
+          <p class="empty" id="subsEmpty">No subscribers yet.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-security" class="dash-section hidden">
+      <div class="panel" id="passwordPanel">
         <h3>Change Admin Password</h3>
         <form id="passwordForm" autocomplete="off">
           <label class="field">
@@ -89,9 +224,76 @@
           <p class="form-error" id="passwordStatus"></p>
         </form>
       </div>
+
+      <div class="panel" id="adminsPanel">
+        <h3>Admin Accounts</h3>
+        <p class="muted">Create admins with limited access. The owner account always has full access.</p>
+        <button class="btn btn-primary" id="newAdminBtn">+ New Admin</button>
+
+        <div id="createAdminPanel" class="hidden">
+          <div class="panel-grid">
+            <label class="field">
+              <span>Username</span>
+              <input type="text" id="adminUsername" />
+            </label>
+            <label class="field">
+              <span>Password</span>
+              <input type="password" id="adminPassword" />
+            </label>
+          </div>
+          <h3>Permissions</h3>
+          <div class="perm-grid" id="createAdminPerms"></div>
+          <div class="panel-actions">
+            <button class="btn btn-primary" id="createAdminBtn">Create Admin</button>
+            <button class="btn btn-ghost" id="cancelCreateAdminBtn">Cancel</button>
+            <span class="panel-status" id="createAdminStatus"></span>
+          </div>
+        </div>
+
+        <div id="editAdminPanel" class="hidden">
+          <h3>Edit Admin</h3>
+          <p class="muted">Editing: <strong id="editAdminName"></strong></p>
+          <label class="field">
+            <span>Reset password (optional)</span>
+            <input type="password" id="editAdminPassword" placeholder="Leave blank to keep current" />
+          </label>
+          <h3>Permissions</h3>
+          <div class="perm-grid" id="editAdminPerms"></div>
+          <div class="panel-actions">
+            <button class="btn btn-primary" id="saveAdminBtn">Save Changes</button>
+            <button class="btn btn-ghost" id="cancelEditAdminBtn">Cancel</button>
+            <span class="panel-status" id="editAdminStatus"></span>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Permissions</th>
+                <th>Created</th>
+                <th class="th-actions">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="adminsBody"></tbody>
+          </table>
+          <p class="empty" id="adminsEmpty">No admins found.</p>
+        </div>
+      </div>
+
       <div class="panel">
         <h3>Download Build</h3>
-        <p class="muted">Drop your built <code>Hydra Sploits.exe</code> into <code>public/download/</code> to make it available on the site.</p>
+        <p class="muted">Set an external link, or leave it empty to serve <code>Hydra Sploits.exe</code> from <code>public/download/</code>.</p>
+        <label class="field">
+          <span>Download link</span>
+          <input type="text" id="downloadUrl" placeholder="https://example.com/Hydra-Sploits.exe" />
+        </label>
+        <div class="panel-actions">
+          <button class="btn btn-primary" id="saveDownloadBtn">Save Link</button>
+          <span class="panel-status" id="downloadStatus"></span>
+        </div>
       </div>
     </section>
 
