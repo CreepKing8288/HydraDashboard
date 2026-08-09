@@ -543,7 +543,8 @@ function renderAdmins() {
 
   admins.forEach((a) => {
     const isOwner = a.role === 'owner';
-    const permsLabel = isOwner ? 'All access' : (a.permissions.length ? escapeHtml(a.permissions.join(', ')) : '<span class="muted">None</span>');
+    const perms = a.permissions || [];
+    const permsLabel = isOwner ? 'All access' : (perms.length ? escapeHtml(perms.join(', ')) : '<span class="muted">None</span>');
     const rowActions = isOwner
       ? '<span class="muted">—</span>'
       : `<button class="btn btn-ghost" data-admin-act="edit" data-admin-username="${escapeAttr(a.username)}">Edit</button>

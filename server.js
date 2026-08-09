@@ -5,9 +5,10 @@ const crypto = require('crypto');
 const dns = require('dns');
 const { MongoClient, ObjectId } = require('mongodb');
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 const MONGODB_URI =
-  process.env.MONGODB_URI;
+  process.env.MONGODB_URI ||
+  'mongodb+srv://HydraSploit:qdgWiuE06DtO3R8x@hydrakeysys.q646mpv.mongodb.net/?retryWrites=true&w=majority';
 const DB_NAME = 'hydrakeysys';
 const SESSION_TTL_MS = 12 * 60 * 60 * 1000;
 
@@ -145,11 +146,17 @@ app.get('/api/me', auth, (req, res) => {
 });
 
 app.get('/api/admins', auth, requireOwner, async (req, res) => {
-  const admins = await db
+  const docs = await db
     .collection('admins')
     .find({})
     .project({ username: 1, role: 1, permissions: 1, createdAt: 1 })
     .toArray();
+  const admins = docs.map((a) => ({
+    username: a.username,
+    role: a.role === 'admin' ? 'admin' : 'owner',
+    permissions: Array.isArray(a.permissions) ? a.permissions : [],
+    createdAt: a.createdAt,
+  }));
   res.json({ admins });
 });
 
