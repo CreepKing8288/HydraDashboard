@@ -463,6 +463,42 @@ select:focus { border-color: var(--red); }
 
 .th-actions { text-align: right; }
 
+/* Version & Changelog */
+.version-badge {
+  display: inline-block;
+  padding: 5px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: var(--red);
+  border: 1px solid var(--red);
+  background: rgba(229, 57, 53, 0.08);
+}
+
+.changelog-card { margin-top: 24px; }
+
+.changelog-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.changelog-list li {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+  padding-left: 22px;
+  position: relative;
+}
+.changelog-list li::before {
+  content: "+";
+  position: absolute;
+  left: 0;
+  color: var(--red);
+  font-weight: 800;
+}
+
 
 @media (max-width: 640px) {
   .hero-title { font-size: 36px; }

@@ -163,6 +163,15 @@
       <br><br>
       <div class="card" style="max-width: 700px;">
         <a href="/download" class="btn btn-primary" style="margin-bottom: 16px;">Download HYDRA EXECUTOR</a>
+        <div style="text-align: center;">
+          <span class="version-badge" id="software-version">Checking latest version...</span>
+        </div>
+      </div>
+      <div class="card changelog-card" style="max-width: 700px;">
+        <h2 style="font-size: 24px; color: #fff; margin-bottom: 16px; text-align: center;">What's New</h2>
+        <ul class="changelog-list" id="changelog-list">
+          <li style="text-align: center;">Loading changelog...</li>
+        </ul>
       </div>
     </section>
     <br><br><br><br><br><br><br><br><br>
@@ -312,6 +321,40 @@
     document.querySelectorAll('.reveal-on-scroll').forEach((el) => {
       observer.observe(el);
     });
+  </script>
+
+  <script>
+    (async () => {
+      const versionEl = document.getElementById('software-version');
+      const listEl = document.getElementById('changelog-list');
+      try {
+        const res = await fetch('https://raw.githubusercontent.com/CreepKing8288/HydraProject/refs/heads/main/version.txt', { cache: 'no-store' });
+        if (!res.ok) throw new Error('Failed to fetch version: ' + res.status);
+        const data = await res.json();
+        if (versionEl) {
+          versionEl.textContent = data.SoftwareVersion ? 'V' + data.SoftwareVersion : 'Version unavailable';
+        }
+        if (listEl) {
+          listEl.innerHTML = '';
+          const lines = String(data.Changelog || '')
+            .split('\n')
+            .map((l) => l.trim())
+            .filter(Boolean);
+          if (lines.length === 0) {
+            listEl.innerHTML = '<li style="text-align: center;">No recent changes.</li>';
+          } else {
+            lines.forEach((line) => {
+              const li = document.createElement('li');
+              li.textContent = line.replace(/^\[\+\]\s*/, '');
+              listEl.appendChild(li);
+            });
+          }
+        }
+      } catch (err) {
+        if (versionEl) versionEl.textContent = 'Version unavailable';
+        if (listEl) listEl.innerHTML = '<li style="text-align: center;">Unable to load changelog.</li>';
+      }
+    })();
   </script>
 </body>
 </html>
