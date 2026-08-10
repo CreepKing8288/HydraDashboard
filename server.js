@@ -5,11 +5,15 @@ const crypto = require('crypto');
 const dns = require('dns');
 const { MongoClient, ObjectId } = require('mongodb');
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 const MONGODB_URI =
-  process.env.MONGODB_URI;
+  process.env.MONGODB_URI ||
+  'mongodb+srv://HydraSploit:qdgWiuE06DtO3R8x@hydrakeysys.q646mpv.mongodb.net/?retryWrites=true&w=majority';
 const DB_NAME = 'hydrakeysys';
 const SESSION_TTL_MS = 12 * 60 * 60 * 1000;
+const DISCORD_WEBHOOK_URL =
+  process.env.DISCORD_WEBHOOK_URL ||
+  'https://discord.com/api/webhooks/1536356593573175399/WJdKHfapjVXsgtUEoUDABPQY7tgWgeWwBywGHScAkDtA0SMJpbR8OVwsDZ1MXNJdXnRE';
 
 const sessions = new Map();
 const loginAttempts = new Map();
@@ -110,6 +114,33 @@ function makeRequestId() {
       .map((b) => chars[b % chars.length])
       .join('');
   return 'SR-' + seg() + '-' + seg() + '-' + seg();
+}
+
+async function sendSubscriptionWebhook(info) {
+  try {
+    await fetch(DISCORD_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: 'Hydra Key System',
+        embeds: [
+          {
+            title: 'New Subscription Request',
+            color: 0x5865f2,
+            fields: [
+              { name: 'Plan', value: info.plan, inline: true },
+              { name: 'Discord', value: info.discord, inline: true },
+              { name: 'Request ID', value: info.requestId, inline: true },
+              { name: 'Note', value: info.note || '\u2014' },
+            ],
+            timestamp: new Date().toISOString(),
+          },
+        ],
+      }),
+    });
+  } catch (e) {
+    console.error('Webhook failed:', e.message);
+  }
 }
 
 app.get('/api/health', (req, res) => res.json({ ok: true }));
@@ -394,6 +425,7 @@ app.post('/api/subscriptions', async (req, res) => {
   };
   await db.collection('subscriptions').insertOne(doc);
   lock.count++;
+  sendSubscriptionWebhook({ plan: doc.plan, discord: doc.discord, note: doc.note, requestId: doc.requestId });
   res.json({ ok: true, requestId: doc.requestId });
 });
 
