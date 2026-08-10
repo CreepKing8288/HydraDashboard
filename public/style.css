@@ -499,6 +499,11 @@ select:focus { border-color: var(--red); }
   font-weight: 800;
 }
 
+.tilt-hover {
+  will-change: transform;
+  transform-style: preserve-3d;
+}
+
 
 @media (max-width: 640px) {
   .hero-title { font-size: 36px; }
