@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Hydra Executor - Roblox Script Execution</title>
-  <meta name="description" content="Download HYDRA EXECUTOR - a fast, reliable, and feature-packed Roblox script executor with lightning-fast execution, wide script compatibility, and code correction." />
+  <meta name="description" content="Download Hydra Executor - a fast, reliable, and feature-packed Roblox script executor with lightning-fast execution, wide script compatibility, and code correction." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://hydradashboard.onrender.com/" />
   <meta property="og:title" content="Hydra Executor - Roblox Script Execution" />
@@ -55,6 +55,16 @@
       margin-bottom: 12px;
       color: var(--red);
       animation: spinStar 8s linear infinite;
+    }
+
+    /* Download button blocked state */
+    .download-blocked {
+      opacity: 0.6;
+      cursor: not-allowed;
+      background: #3a2a2a;
+    }
+    .download-blocked:hover {
+      background: #3a2a2a;
     }
 
     /* Scroll reveal dynamic styling */
@@ -162,7 +172,7 @@
       </div>
       <br><br>
       <div class="card" style="max-width: 700px;">
-        <a href="/download" class="btn btn-primary" style="margin-bottom: 16px;">Download Hydra Straper</a>
+        <button id="downloadBtn" class="btn btn-primary" style="margin-bottom: 16px;">Detecting system...</button>
         <div style="text-align: center;">
           <span class="version-badge" id="software-version">Checking latest version...</span>
         </div>
@@ -373,6 +383,34 @@
         preview.style.transform = '';
       });
     }
+  </script>
+
+  <script>
+    (function () {
+      const btn = document.getElementById('downloadBtn');
+      if (!btn) return;
+      const ua = navigator.userAgent;
+      const isIPad = /Macintosh/.test(ua) && navigator.maxTouchPoints > 1;
+      const mobile = /Android|iPhone|iPod|Windows Phone/i.test(ua) || isIPad;
+      const mac = /Macintosh|Mac OS X|MacPPC|MacIntel/i.test(ua) && !isIPad;
+      const linux = /Linux|X11/i.test(ua) && !mobile;
+      const windows = /Windows NT/i.test(ua);
+
+      if (mobile) {
+        btn.textContent = 'Coming Soon';
+        btn.disabled = true;
+        btn.classList.add('download-blocked');
+      } else if (mac || linux) {
+        btn.textContent = 'App not supported on this OS';
+        btn.disabled = true;
+        btn.classList.add('download-blocked');
+      } else {
+        btn.textContent = 'Download Hydra Straper';
+        btn.addEventListener('click', () => {
+          window.location.href = '/download';
+        });
+      }
+    })();
   </script>
 </body>
 </html>
